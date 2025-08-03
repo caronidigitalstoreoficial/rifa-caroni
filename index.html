@@ -1,40 +1,210 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rifa da Sorte - Valdinei Carone</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rifa Online | Caroni Digital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f8f8;
+      color: #333;
+    }
+    header {
+      background-color: #4caf50;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+    }
+    .prize-img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 8px;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f4f4f4;
+    }
+    .number {
+      background: #e0e0e0;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .number.selected {
+      background: #4caf50;
+      color: white;
+    }
+    .info, .pix-box, .user-input, .status-message {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    .pix-box {
+      background: #fff9c4;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .buy-button {
+      margin-top: 20px;
+      padding: 15px;
+      width: 100%;
+      font-size: 18px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .buy-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+    .status-message {
+      font-weight: bold;
+      color: #d32f2f;
+    }
+    .success-message {
+      font-weight: bold;
+      color: #388e3c;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .number {
+        padding: 8px;
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body>
 
-  <!-- Cabeçalho -->
-  <header class="bg-purple-700 text-white py-8 text-center">
-    <h1 class="text-3xl font-bold">🎉 Rifa da Sorte - Valdinei Carone 🎉</h1>
-    <p class="text-lg mt-2">Concorra a <span class="font-semibold">R$ 500 via Pix</span> por apenas <span class="font-semibold">R$ 2,00</span>!</p>
+  <header>
+    <h1>Rifa Online</h1>
+    <p><strong>Sorteio: 15 de Setembro</strong><br><strong>Prêmio: R$ 500,00 depositado via Pix</strong></p>
   </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+  <div class="container">
+    <img src="https://files.oaiusercontent.com/file-vZc5Xla6gBgdQZw0n9cpEcWV?se=2025-08-03T23%3A17%3A00Z&sp=r&sv=2021-08-06&sr=b&sig=mRceL4ZUP29s3HZXLVToH0kLnwYNSt4y7DpS2JRAiOQ%3D" alt="Prêmio da Rifa" class="prize-img">
 
-    <!-- Informações -->
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold mb-2">📅 Data do Sorteio</h2>
-      <p>Dia <strong>15 de setembro de 2025</strong> ou quando todos os números forem vendidos.</p>
-    </section>
+    <h2>Escolha seus números:</h2>
+    <div class="numbers" id="numbersContainer"></div>
 
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold mb-2">💸 Pagamento via Pix</h2>
-      <ul class="list-disc list-inside space-y-1">
-        <li><strong>Chave Pix (celular):</strong> 55 14 99731-2602</li>
-        <li><strong>Chave Pix (e-mail):</strong> valdineicarone@gmail.com</li>
-        <li><strong>Valor por número:</strong> R$ 2,00</li>
-      </ul>
-    </section>
+    <div class="info">
+      <p><strong>Números selecionados:</strong> <span id="selectedCount">0</span></p>
+      <p><strong>Valor total:</strong> R$ <span id="totalValue">0,00</span></p>
+    </div>
 
-    <!-- Números da Rifa -->
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold mb-4">🔢 Números Disponíveis</h2>
+    <div class="user-input">
+      <label for="userPhone">Seu WhatsApp com DDD:</label>
+      <input type="text" id="userPhone" placeholder="Ex: 5591987654321" oninput="checkInput()" />
+    </div>
+
+    <div class="pix-box">
+      Chave Pix para pagamento: <br>
+      <span id="pixKey">valdineicarone@gmail.com</span>
+    </div>
+
+    <div class="status-message" id="statusMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+
+    <button class="buy-button" id="buyBtn" onclick="buyNumbers()" disabled>Finalizar Compra via WhatsApp</button>
+  </div>
+
+  <script>
+    const totalNumbers = 1000;
+    const pricePerNumber = 2;
+    const selectedNumbers = [];
+
+    const container = document.getElementById("numbersContainer");
+    const selectedCount = document.getElementById("selectedCount");
+    const totalValue = document.getElementById("totalValue");
+    const pixKey = document.getElementById("pixKey");
+    const userPhone = document.getElementById("userPhone");
+    const buyBtn = document.getElementById("buyBtn");
+    const statusMessage = document.getElementById("statusMessage");
+    const successMessage = document.getElementById("successMessage");
+
+    for (let i = 1; i <= totalNumbers; i++) {
+      const num = document.createElement("div");
+      num.classList.add("number");
+      num.textContent = i;
+      num.onclick = () => toggleNumber(i, num);
+      container.appendChild(num);
+    }
+
+    function toggleNumber(number, element) {
+      if (selectedNumbers.length >= totalNumbers) return;
+
+      const index = selectedNumbers.indexOf(number);
+      if (index > -1) {
+        selectedNumbers.splice(index, 1);
+        element.classList.remove("selected");
+      } else {
+        selectedNumbers.push(number);
+        element.classList.add("selected");
+      }
+
+      selectedCount.textContent = selectedNumbers.length;
+      totalValue.textContent = (selectedNumbers.length * pricePerNumber).toFixed(2).replace(".", ",");
+
+      if (selectedNumbers.length === totalNumbers) {
+        statusMessage.textContent = "Todos os números foram vendidos. Rifa encerrada.";
+        buyBtn.disabled = true;
+      }
+
+      checkInput();
+    }
+
+    function checkInput() {
+      buyBtn.disabled = !(userPhone.value.trim().length >= 10 && selectedNumbers.length > 0);
+    }
+
+    function buyNumbers() {
+      const telefone = userPhone.value.trim();
+      if (!telefone.match(/^\d{10,13}$/)) {
+        alert("Digite um número de WhatsApp válido.");
+        return;
+      }
+
+      const numeroAdm = "551497312602";
+      const mensagem = `Olá! Quero participar da rifa com os seguintes números:\n${selectedNumbers.join(", ")}\nValor total: R$ ${(selectedNumbers.length * pricePerNumber).toFixed(2).replace(".", ",")}\nMeu WhatsApp para contato: ${telefone}\nChave Pix: ${pixKey.textContent}\nBoa sorte! O resultado será divulgado dia 15 de Setembro. O prêmio de R$ 500,00 será depositado via Pix ao ganhador.`;
+
+      const url = `https://wa.me/${numeroAdm}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+
+      successMessage.textContent = "✅ Boa sorte! Sua participação foi registrada.";
+    }
+  </script>
+
+</body>
+</html>    <h2 class="text-2xl font-semibold mb-4">🔢 Números Disponíveis</h2>
       <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 h-[300px] overflow-y-scroll border border-gray-300 p-4 rounded">
         <script>
           for (let i = 1; i <= 1000; i++) {
