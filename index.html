@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rifa Online | Caroni Digital</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    header {
+      background: #4caf50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .prize-img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .numbers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .number {
+      width: 50px;
+      height: 50px;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .number.selected {
+      background: #4caf50;
+      color: white;
+    }
+
+    .info {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .pix-box {
+      background: #fff9c4;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .buy-button {
+      margin-top: 20px;
+      padding: 15px;
+      width: 100%;
+      font-size: 18px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .buy-button:hover {
+      background: #43a047;
+    }
+
+    @media (max-width: 500px) {
+      .number {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Rifa Online</h1>
+    <p>Concorra a um super prêmio por apenas R$ 2,00!</p>
+  </header>
+
+  <div class="container">
+    <img src="https://via.placeholder.com/800x300.png?text=PRÊMIO+DA+RIFA" alt="Prêmio" class="prize-img">
+
+    <h2>Escolha seus números:</h2>
+    <div class="numbers" id="numbersContainer"></div>
+
+    <div class="info">
+      <p><strong>Números selecionados:</strong> <span id="selectedCount">0</span></p>
+      <p><strong>Valor total:</strong> R$ <span id="totalValue">0,00</span></p>
+    </div>
+
+    <div class="pix-box">
+      Pagamento via Pix: <br>
+      <span id="pixKey">valdineicarone@gmail.com</span>
+    </div>
+
+    <button class="buy-button" onclick="buyNumbers()">Finalizar compra via WhatsApp</button>
+  </div>
+
+  <script>
+    const totalNumbers = 100;
+    const pricePerNumber = 5;
+    const numbersContainer = document.getElementById("numbersContainer");
+    const selectedCount = document.getElementById("selectedCount");
+    const totalValue = document.getElementById("totalValue");
+    const pixKey = document.getElementById("pixKey");
+    const selectedNumbers = [];
+
+    for (let i = 1; i <= totalNumbers; i++) {
+      const numDiv = document.createElement("div");
+      numDiv.textContent = i;
+      numDiv.classList.add("number");
+      numDiv.addEventListener("click", () => toggleNumber(i, numDiv));
+      numbersContainer.appendChild(numDiv);
+    }
+
+    function toggleNumber(num, element) {
+      const index = selectedNumbers.indexOf(num);
+      if (index >= 0) {
+        selectedNumbers.splice(index, 1);
+        element.classList.remove("selected");
+      } else {
+        selectedNumbers.push(num);
+        element.classList.add("selected");
+      }
+
+      selectedCount.textContent = selectedNumbers.length;
+      totalValue.textContent = (selectedNumbers.length * pricePerNumber).toFixed(2).replace(".", ",");
+    }
+
+    function buyNumbers() {
+      if (selectedNumbers.length === 0) {
+        alert("Selecione pelo menos 1 número.");
+        return;
+      }
+      const numero = "551497312602"; // Seu WhatsApp
+      const mensagem = `Olá! Quero participar da rifa com os seguintes números: ${selectedNumbers.join(", ")}.\nValor total: R$ ${(selectedNumbers.length * pricePerNumber).toFixed(2).replace(".", ",")}\nChave Pix: ${pixKey.textContent}`;
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</html>
