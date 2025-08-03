@@ -72,7 +72,7 @@
 
   <header>
     <h1>Rifa Online</h1>
-    <p>Concorra a um <strong>PRÊMIO INCRÍVEL</strong> com apenas R$ 5,00!</p>
+    <p>Concorra a um <strong>PRÊMIO INCRÍVEL</strong> com apenas R$ 50,00!</p>
   </header>
 
   <div class="container">
