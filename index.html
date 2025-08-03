@@ -1,40 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rifa Online | Caroni Digital</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      color: #333;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifa da Sorte - Valdinei Carone</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
 
-    header {
-      background: #4caf50;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+  <!-- Cabeçalho -->
+  <header class="bg-purple-700 text-white py-8 text-center">
+    <h1 class="text-3xl font-bold">🎉 Rifa da Sorte - Valdinei Carone 🎉</h1>
+    <p class="text-lg mt-2">Concorra a <span class="font-semibold">R$ 500 via Pix</span> por apenas <span class="font-semibold">R$ 2,00</span>!</p>
+  </header>
 
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-    }
+  <!-- Conteúdo Principal -->
+  <main class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
 
-    .prize-img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
+    <!-- Informações -->
+    <section class="mb-6">
+      <h2 class="text-2xl font-semibold mb-2">📅 Data do Sorteio</h2>
+      <p>Dia <strong>15 de setembro de 2025</strong> ou quando todos os números forem vendidos.</p>
+    </section>
 
-    h2 {
-      margin-top: 0;
+    <section class="mb-6">
+      <h2 class="text-2xl font-semibold mb-2">💸 Pagamento via Pix</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>Chave Pix (celular):</strong> 55 14 99731-2602</li>
+        <li><strong>Chave Pix (e-mail):</strong> valdineicarone@gmail.com</li>
+        <li><strong>Valor por número:</strong> R$ 2,00</li>
+      </ul>
+    </section>
+
+    <!-- Números da Rifa -->
+    <section class="mb-6">
+      <h2 class="text-2xl font-semibold mb-4">🔢 Números Disponíveis</h2>
+      <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 h-[300px] overflow-y-scroll border border-gray-300 p-4 rounded">
+        <script>
+          for (let i = 1; i <= 1000; i++) {
+            document.write(`<div class="bg-gray-200 text-center py-2 rounded text-sm font-medium">${i}</div>`);
+          }
+        </script>
+      </div>
+    </section>
+
+    <!-- Botão WhatsApp -->
+    <div class="text-center mt-6">
+      <a href="https://wa.me/5514997312602?text=Olá%2C%20tenho%20interesse%20em%20participar%20da%20Rifa%20da%20Sorte%20de%20R%24500%20via%20Pix.%20Quero%20reservar%20meus%20números!" target="_blank" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300">
+        Reservar Números via WhatsApp
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="text-center text-sm text-gray-600 mt-8 mb-4">
+    © 2025 - Rifa organizada por Valdinei Carone. Sorteio automático via WhatsApp.
+  </footer>
+
+</body>
+</html>      margin-top: 0;
     }
 
     .numbers {
