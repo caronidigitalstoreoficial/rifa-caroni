@@ -1,40 +1,263 @@
  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Caroni Rifas - Compre Seu Número e Participe!</title>
-<style>
-  /* Reset e fonte */
-  * {
-    box-sizing: border-box;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caroni Rifas - Concorra a R$500!</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f; color: #fff;
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(90deg, #00264d, #004080);
+      padding: 20px;
+      text-align: center;
+      color: gold;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 10px #000a;
+      letter-spacing: 1px;
+    }
+    .banner {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    main {
+      flex: 1; max-width: 1100px; margin: 30px auto;
+      padding: 25px; background: #1b1b1b;
+      border-radius: 12px; box-shadow: 0 0 15px #007bff55;
+    }
+    .info {
+      background: #003366;
+      border-left: 5px solid gold;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+    .info p {
+      margin: 8px 0;
+      font-size: 1.1rem;
+    }
+    h3 {
+      margin-bottom: 10px;
+      color: gold;
+    }
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+      gap: 6px;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #222; padding: 10px;
+      border-radius: 8px;
+    }
+    .number {
+      text-align: center;
+      padding: 8px 0;
+      border-radius: 6px;
+      background: #333; color: #00ff99;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid #008055;
+    }
+    .number:hover { background: #0066cc; color: #fff; }
+    .number.sold {
+      background: #4d0000;
+      color: #ff9999;
+      border-color: #aa0000;
+      cursor: not-allowed;
+    }
+    .number.selected {
+      background: gold;
+      color: #000;
+      border-color: #ffd700;
+    }
+    form {
+      margin-top: 20px;
+      max-width: 400px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      background: #222; color: #eee;
+      border: 1px solid #555;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 20px;
+      background: gold;
+      color: black;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #555; cursor: not-allowed;
+    }
+    .status {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #00ff99;
+    }
+    .summary {
+      margin-top: 30px;
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .summary h4 {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    footer {
+      text-align: center;
+      background: #00264d;
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  🎉 Caroni Rifas - R$500 no Pix! 🎉
+</header>
+
+<img src="https://i.imgur.com/xQyKZbB.png" alt="Prêmio de R$500" class="banner" />
+
+<main>
+  <div class="info">
+    <p><strong>💰 Prêmio:</strong> R$500,00</p>
+    <p><strong>🎟 Valor por número:</strong> R$2,00</p>
+    <p><strong>📅 Sorteio:</strong> 15 de Setembro de 2025 (via WhatsApp)</p>
+    <p><strong>📲 Contato admin:</strong> <a href="https://wa.me/551497312602" target="_blank" style="color:#00ff99;">551497312602</a></p>
+    <p><strong>💳 PIX:</strong> <code>valdineicarone@gmail.com</code></p>
+  </div>
+
+  <h3>Selecione seus números:</h3>
+  <div class="numbers" id="numbers-container"></div>
+
+  <form id="buyForm">
+    <label for="name">Seu nome:</label>
+    <input type="text" id="name" required />
+
+    <label for="whatsapp">Seu WhatsApp:</label>
+    <input type="text" id="whatsapp" placeholder="ex: 551499999999" required />
+
+    <button type="submit" id="buyBtn" disabled>Comprar número(s)</button>
+  </form>
+
+  <p class="status" id="status"></p>
+
+  <div class="summary">
+    <h4>Números já vendidos:</h4>
+    <p id="soldList">Nenhum número vendido ainda.</p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Caroni Rifas - Boa sorte! 🍀
+</footer>
+
+<script>
+  const totalNumbers = 1000;
+  const soldNumbers = new Set(JSON.parse(localStorage.getItem('caroniRifa') || "[]"));
+  const selected = new Set();
+  const container = document.getElementById('numbers-container');
+  const buyBtn = document.getElementById('buyBtn');
+  const nameInput = document.getElementById('name');
+  const whatsappInput = document.getElementById('whatsapp');
+  const status = document.getElementById('status');
+  const soldList = document.getElementById('soldList');
+
+  function pad(n) { return n.toString().padStart(3, '0'); }
+
+  function render() {
+    container.innerHTML = '';
+    for (let i = 0; i < totalNumbers; i++) {
+      const n = pad(i);
+      const div = document.createElement('div');
+      div.textContent = n;
+      div.className = 'number';
+      if (soldNumbers.has(n)) {
+        div.classList.add('sold');
+      } else {
+        div.onclick = () => toggle(n, div);
+      }
+      if (selected.has(n)) {
+        div.classList.add('selected');
+      }
+      container.appendChild(div);
+    }
+    updateBtn();
+    renderSoldList();
   }
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+
+  function renderSoldList() {
+    const vendidos = [...soldNumbers].sort();
+    soldList.textContent = vendidos.length
+      ? vendidos.join(', ')
+      : 'Nenhum número vendido ainda.';
   }
-  header {
-    background: #007bff;
-    padding: 20px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+
+  function toggle(n, div) {
+    if (selected.has(n)) {
+      selected.delete(n);
+      div.classList.remove('selected');
+    } else {
+      selected.add(n);
+      div.classList.add('selected');
+    }
+    updateBtn();
   }
-  main {
-    flex: 1;
-    max-width: 1200px;
-    margin: 30px auto;
-    background: #1e1e1e;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px #007bffaa;
+
+  function updateBtn() {
+    buyBtn.disabled = !(selected.size && nameInput.value.trim() && whatsappInput.value.trim());
+    if (soldNumbers.size >= totalNumbers) {
+      status.textContent = "Todos os números foram vendidos.";
+      buyBtn.disabled = true;
+    } else {
+      status.textContent = "";
+    }
+  }
+
+  nameInput.oninput = updateBtn;
+  whatsappInput.oninput = updateBtn;
+
+  document.getElementById('buyForm').onsubmit = e => {
+    e.preventDefault();
+    selected.forEach(n => soldNumbers.add(n));
+    localStorage.setItem('caroniRifa', JSON.stringify([...soldNumbers]));
+    alert(
+      `Obrigado, ${nameInput.value}!\nNúmeros comprados: ${[...selected].join(', ')}\n` +
+      `📲 WhatsApp: ${whatsappInput.value}\n💳 Envie R$${(selected.size * 2).toFixed(2)} para: valdineicarone@gmail.com`
+    );
+    selected.clear();
+    nameInput.value = '';
+    whatsappInput.value = '';
+    render();
+  };
+
+  render();
+</script>
+
+</body>
+</html>   box-shadow: 0 0 20px #007bffaa;
   }
   h1, h2, h3 {
     margin: 0 0 15px 0;
