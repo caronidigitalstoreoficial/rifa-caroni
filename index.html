@@ -1,40 +1,179 @@
-    <!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Caroni Rifas - R$500 no Pix</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caroni Rifas - Prêmio R$500</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f2f2f2;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       text-align: center;
     }
-    header {
-      background: #111;
-      color: #fff;
-      padding: 20px;
-    }
     h1 {
-      margin: 0;
-      font-size: 32px;
+      color: #d60000;
+      font-size: 2.5em;
     }
-    .prize-img {
-      width: 100%;
-      max-width: 350px;
-      margin: 20px auto;
-      border-radius: 15px;
-      box-shadow: 0 0 10px #aaa;
-    }
-    .pix-box {
-      margin: 15px auto;
-      padding: 10px;
-      background: #e0ffe0;
-      border: 1px solid #0a0;
-      display: inline-block;
+    .logo {
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      background: #d60000;
+      padding: 10px 20px;
       border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .prize-image {
+      width: 200px;
+      margin: 10px auto;
+    }
+    #numbers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+      margin: auto;
+    }
+    .number {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      background-color: #fff;
+      border: 2px solid #d60000;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .selected {
+      background-color: #d60000;
+      color: #fff;
+    }
+    .sold {
+      background-color: #ccc;
+      color: #999;
+      cursor: not-allowed;
+    }
+    .controls {
+      margin-top: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    #copyPix {
+      background: #ffcc00;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #shareBtn {
+      background: #25D366;
+      color: white;
+      font-weight: bold;
+    }
+    #status {
+      margin: 20px 0;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">Caroni Rifas</div>
+  <h1>🏆 R$500 via Pix</h1>
+  <img class="prize-image" src="https://i.imgur.com/lfV0YXl.png" alt="Prêmio R$500">
+
+  <div id="status">Números disponíveis: <span id="disponiveis">1000</span> / Arrecadado: R$<span id="total">0</span></div>
+
+  <div class="controls">
+    <input type="text" id="whatsapp" placeholder="Seu WhatsApp com DDD">
+    <button onclick="confirmarCompra()">Confirmar Compra</button><br>
+    <input type="text" id="pixKey" value="valdineicarone@gmail.com" readonly>
+    <button id="copyPix" onclick="copiarPix()">Copiar Chave Pix</button>
+    <button id="shareBtn" onclick="compartilhar()">Compartilhar no WhatsApp</button>
+  </div>
+
+  <div id="numbers"></div>
+
+  <script>
+    const totalNumeros = 1000;
+    const valorPorNumero = 2;
+    let vendidos = [];
+
+    function gerarNumeros() {
+      const container = document.getElementById("numbers");
+      for (let i = 0; i < totalNumeros; i++) {
+        const num = String(i).padStart(3, "0");
+        const div = document.createElement("div");
+        div.className = "number";
+        div.innerText = num;
+        div.onclick = () => selecionarNumero(div);
+        container.appendChild(div);
+      }
+    }
+
+    function selecionarNumero(el) {
+      if (el.classList.contains("sold")) return;
+      el.classList.toggle("selected");
+    }
+
+    function confirmarCompra() {
+      const selecionados = Array.from(document.querySelectorAll(".selected"));
+      const whatsapp = document.getElementById("whatsapp").value.trim();
+
+      if (!whatsapp || selecionados.length === 0) {
+        alert("Digite seu WhatsApp e selecione ao menos 1 número.");
+        return;
+      }
+
+      let lista = selecionados.map(e => e.innerText);
+      let total = lista.length * valorPorNumero;
+
+      let confirmacao = `Total a pagar: R$${total}\nNúmeros: ${lista.join(", ")}\nPix: valdineicarone@gmail.com\nEnvie comprovante para: ${whatsapp}`;
+      if (confirm(confirmacao)) {
+        lista.forEach(num => {
+          const el = Array.from(document.querySelectorAll(".number")).find(e => e.innerText === num);
+          el.classList.remove("selected");
+          el.classList.add("sold");
+          vendidos.push(num);
+        });
+        atualizarPainel();
+      }
+    }
+
+    function atualizarPainel() {
+      document.getElementById("total").innerText = vendidos.length * valorPorNumero;
+      document.getElementById("disponiveis").innerText = totalNumeros - vendidos.length;
+      if (vendidos.length >= totalNumeros) {
+        document.getElementById("status").innerHTML = "🎉 <span style='color: green;'>ENCERRADO! Todos os números foram vendidos.</span>";
+      }
+    }
+
+    function copiarPix() {
+      let pix = document.getElementById("pixKey");
+      pix.select();
+      document.execCommand("copy");
+      alert("Chave Pix copiada!");
+    }
+
+    function compartilhar() {
+      const url = encodeURIComponent(window.location.href);
+      const msg = encodeURIComponent("Participe da rifa Caroni Rifas! 🤑 Prêmio de R$500 via Pix! 👉 " + window.location.href);
+      window.open(`https://wa.me/?text=${msg}`, "_blank");
+    }
+
+    gerarNumeros();
+  </script>
+
+</body>
+</html>      border-radius: 10px;
     }
     .pix-box input {
       border: none;
