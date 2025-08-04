@@ -1,40 +1,187 @@
- <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rifa Online | Caroni Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rifa Premiada - R$500</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
       margin: 0;
-      background: #f8f8f8;
-      color: #333;
+      padding: 0;
     }
-
     header {
-      background-color: #4caf50;
-      padding: 20px;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
       color: white;
       text-align: center;
+      padding: 30px 15px;
     }
-
+    header img {
+      max-width: 250px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
     .container {
-      max-width: 1000px;
-      margin: 20px auto;
       padding: 20px;
-      background: white;
-      border-radius: 12px;
     }
-
-    .prize-img {
-      width: 100%;
+    .info, .form {
+      background: white;
+      padding: 20px;
       border-radius: 12px;
       margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .info p {
+      margin: 5px 0;
+      font-size: 1.1em;
+    }
+    .highlight {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+      gap: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .number {
+      background: #eee;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .number.selected {
+      background: #27ae60;
+      color: white;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      background: #27ae60;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #219150;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .ended {
+      background: #ff4d4d !important;
+      color: white !important;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://i.imgur.com/dVLwK6X.jpg" alt="Prêmio R$500" />
+  <h1>🎁 Rifa Premiada - R$500</h1>
+  <p>Sorteio: <strong>15 de Setembro de 2025</strong> via WhatsApp 📲</p>
+</header>
+
+<div class="container">
+  <div class="info">
+    <p>💰 <span class="highlight">Prêmio:</span> R$500</p>
+    <p>🎟️ <span class="highlight">1000 números disponíveis</span></p>
+    <p>💵 <span class="highlight">R$2 por número</span></p>
+    <p>🔒 <span class="highlight">Encerramento automático ao esgotar</span></p>
+    <p>📨 Sorteio via <strong>lista de transmissão do WhatsApp</strong></p>
+    <p>🔗 Pix: <strong>valdineicarone@gmail.com</strong></p>
+  </div>
+
+  <div class="number-grid" id="numberGrid">
+    <!-- Gerado via JS -->
+  </div>
+
+  <div class="form">
+    <input type="text" id="name" placeholder="Seu nome completo" required />
+    <input type="text" id="whatsapp" placeholder="Seu WhatsApp com DDD" required />
+    <button onclick="finalizar()">🎯 Enviar Pedido via WhatsApp</button>
+  </div>
+</div>
+
+<footer>
+  © 2025 - Rifa organizada por Caroni Digital Store
+</footer>
+
+<script>
+  const grid = document.getElementById('numberGrid');
+  const totalNumbers = 1000;
+  const selected = new Set();
+
+  // Gerar os números
+  for (let i = 1; i <= totalNumbers; i++) {
+    const div = document.createElement('div');
+    div.classList.add('number');
+    div.textContent = i;
+    div.onclick = () => {
+      if (selected.size >= totalNumbers) return;
+      if (div.classList.contains('selected')) {
+        div.classList.remove('selected');
+        selected.delete(i);
+      } else {
+        div.classList.add('selected');
+        selected.add(i);
+        if (selected.size === totalNumbers) {
+          alert("Todos os números foram escolhidos. Rifa encerrada.");
+          encerrarRifa();
+        }
+      }
+    };
+    grid.appendChild(div);
+  }
+
+  function encerrarRifa() {
+    document.querySelectorAll('.number').forEach(el => {
+      el.classList.add('ended');
+    });
+    document.querySelector('button').disabled = true;
+    document.querySelector('button').innerText = 'Rifa Encerrada';
+  }
+
+  function finalizar() {
+    const nome = document.getElementById('name').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const numeros = Array.from(selected).sort((a, b) => a - b);
+
+    if (!nome || !whatsapp || numeros.length === 0) {
+      alert("Preencha todos os campos e selecione ao menos 1 número.");
+      return;
     }
 
-    .numbers {
-      display: grid;
+    const total = numeros.length * 2;
+    const msg = `🎉 Olá! Quero participar da Rifa de R$500.\n\n👤 Nome: ${nome}\n📱 WhatsApp: ${whatsapp}\n🔢 Números escolhidos: ${numeros.join(', ')}\n💰 Total: R$${total.toFixed(2)}\n📍 Pix: valdineicarone@gmail.com\n📆 Sorteio dia 15/09/2025 via lista de transmissão.`;
+
+    const tel = '551497312602'; // Seu WhatsApp com DDI
+    const link = `https://wa.me/${tel}?text=${encodeURIComponent(msg)}`;
+    window.open(link, '_blank');
+  }
+</script>
+
+</body>
+</html>   display: grid;
       grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
       gap: 8px;
       max-height: 500px;
