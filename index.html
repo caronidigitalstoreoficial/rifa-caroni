@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rifa Premiada - R$500</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8e7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #d4af37, #f9d976);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 15px;
+    }
+    .highlight {
+      background: #d4af37;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      background-color: #d4af37;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #b9932f;
+    }
+    footer {
+      text-align: center;
+      margin: 30px 0;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔥 RIFA PREMIADA - R$500,00 🔥</h1>
+    <p>Sorteio dia <strong>15 de Setembro de 2025</strong></p>
+  </header>
+
+  <div class="container">
+    <img src="https://i.imgur.com/xH6xA7z.png" alt="Prêmio em dinheiro">
+
+    <div class="highlight">Apenas R$2,00 por número! Apenas 1000 disponíveis!</div>
+
+    <form onsubmit="return enviarRifa()">
+      <label for="nome">Seu Nome:</label>
+      <input type="text" id="nome" required>
+
+      <label for="whatsapp">Seu WhatsApp (com DDD):</label>
+      <input type="text" id="whatsapp" required placeholder="Ex: 14991234567">
+
+      <label for="quantidade">Quantos números deseja?</label>
+      <input type="number" id="quantidade" min="1" max="1000" required>
+
+      <button type="submit">Reservar Números</button>
+    </form>
+
+    <p><strong>Pagamento via PIX:</strong></p>
+    <input type="text" value="valdineicarone@gmail.com" readonly id="pixChave">
+    <button onclick="copiarPIX()">📋 Copiar chave PIX</button>
+
+    <div class="highlight">
+      Sorteio será feito via lista de transmissão no WhatsApp! 📱<br/>
+      Contato: <a href="https://wa.me/551497312602" target="_blank">(14) 97312-602</a>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 - Caroni Digital Store. Todos os direitos reservados.
+  </footer>
+
+  <script>
+    function copiarPIX() {
+      const input = document.getElementById("pixChave");
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Chave PIX copiada!");
+    }
+
+    function enviarRifa() {
+      const nome = document.getElementById("nome").value;
+      const whatsapp = document.getElementById("whatsapp").value;
+      const qtd = document.getElementById("quantidade").value;
+
+      alert(`✅ Obrigado, ${nome}!\n\nVocê escolheu ${qtd} número(s).\nEnviaremos a confirmação no WhatsApp: ${whatsapp}.\n\nFinalize com o pagamento via PIX.`);
+      return false;
+    }
+  </script>
+</body>
+</html>
